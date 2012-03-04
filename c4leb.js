@@ -60,7 +60,7 @@ bot.on('newsong', function (data) {
 //new user enters the room. Add them to list of users and greet them
 bot.on('registered', function (data) {
 	userlist.push(data.user[0].name);
-	if (data.user[0].name != "@noamchomsky666"){
+	if (data.user[0].name != "@c4leb"){
 		bot.speak('Welcome '+  data.user[0].name + ' all your music is belong to code4lib')}
 	});
 	
