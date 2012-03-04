@@ -5,4 +5,14 @@ http://alaingilbert.github.com/Turntable-API/bookmarklet.html
 
 You need to get a lastfm api key as well.
 
-All these are dinfed in details.js in the same directory.
+All these are defined in details.js in the same directory.
+
+Current options are :
+
+/song:
+/song info - retreieve info about a song from lastfm
+/song similar - retreive top five simialr songs from lastfm
+
+/artist:
+/artist info - retreieve info about an artist from lastfm
+/artist similar - retreive top five simialr artist from lastfm
