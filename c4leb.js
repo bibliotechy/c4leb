@@ -82,7 +82,7 @@ var options = {
 
 
 bot.on('speak', function (data) {
-if (data.name != "@noamchomsky666"){	
+if (data.name != "@c4leb"){	
 	//define options for each command to the bot 			
 	text =  data.text.split(' ');
 	switch(text[0]){
