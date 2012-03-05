@@ -2,10 +2,12 @@
  * 
 *Things that would be nice to do, or might suck:
 * 
-*1: Add in persistent data storage - Google Fusion Tables? MongoDB? Something with easy js API.
+*1: Add in persistent data storage -Fusion Tables?  MongoDB? Something with easy js API.
 *2: Add ability for individual room members to save custom data - like zoai love, 
 *3: do something about "special characters" cause ttfm seems to render them funny
 *4: Refactor speak commands as objects for easier enumeration of properties / methods 
+*5: Add some login to look up musicBrainz ids for current playing, as makes IDing easier accross APIs
+*6: Add upcoming concert lookup for current band via songkick api + google maps distance calc
 */
 
 var Bot     = require('ttapi');
@@ -159,7 +161,7 @@ if (data.name != "@c4leb"){
 			
 			case options.song.call:
 				switch(text[1]){
-				// for variable commands on artist
+				// for variable commands on song
 				case 'info': //meh - doesn't play nice with html tags. maybe some serverside jquery innerHtml magic?
 				console.log(playing.song);
 				request('http://ws.audioscrobbler.com/2.0/?method=track.getinfo&artist='
