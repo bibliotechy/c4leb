@@ -16,3 +16,9 @@ Current options are :
 /artist:
 /artist info - retreieve info about an artist from lastfm
 /artist similar - retreive top five simialr artist from lastfm
+
+/who:
+/who (your text here) -  "random user + your text here"
+
+/define
+/define word - take a guess?
