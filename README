@@ -1,0 +1,24 @@
+A chatbot for turntable.fm based on https://github.com/alaingilbert/Turntable-API
+
+You need to get AUTH details to allow the bot to login. See this for how-to:
+http://alaingilbert.github.com/Turntable-API/bookmarklet.html
+
+You need to get a lastfm api key as well.
+
+All these are defined in details.js in the same directory.
+
+Current options are :
+
+/song:
+/song info - retreieve info about a song from lastfm
+/song similar - retreive top five simialr songs from lastfm
+
+/artist:
+/artist info - retreieve info about an artist from lastfm
+/artist similar - retreive top five simialr artist from lastfm
+
+/who:
+/who (your text here) -  "random user + your text here"
+
+/define
+/define word - take a guess?
