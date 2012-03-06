@@ -16,6 +16,8 @@ Current options are :
 /artist:
 /artist info - retreieve info about an artist from lastfm
 /artist similar - retreive top five simialr artist from lastfm
+/artist tour zipcode - currently works with US zipcodes only - find upcoming concerts from this band within 50km 
+of the entered zipcode
 
 /who:
 /who (your text here) -  "random user + your text here"
