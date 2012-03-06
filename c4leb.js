@@ -14,10 +14,11 @@ var repl    = require('repl');
 
 //set the authentication details in a file that 
 //doesn't get uploaded to github
-var AUTH   = require('./details.js').auth();
-var USERID = require('./details.js').userid();
-var ROOMID = require('./details.js').roomid();
-var lastfmkey = require('./details.js').lastfmkey();
+var AUTH       = require('./details.js').auth();
+var USERID     = require('./details.js').userid();
+var ROOMID     = require('./details.js').roomid();
+var lastfmkey  = require('./details.js').lastfmkey();
+var geonamesid = require('./details.js').geonames();
 
 var bot = new Bot(AUTH, USERID, ROOMID);
 
@@ -31,6 +32,12 @@ var goodBands = [
 		"Jethro Tull",
 		"Modest Mouse",
 		"Das Racist"];
+
+if (typeof(Number.prototype.toRad) === "undefined") {
+  Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+  }
+}
 
 //init upon enter the room
 bot.on('roomChanged', function(data) {
@@ -82,11 +89,11 @@ var options = {
 
 
 bot.on('speak', function (data) {
-if (data.name != "@noamchomsky666"){	
+if (data.name != "@c4leb"){	
 	//define options for each command to the bot 			
 	text =  data.text.split(' ');
 	switch(text[0]){
-		case "/who":
+		 case "/who":
 			who = userlist[Math.floor(Math.random() * userlist.length)].name;
 			bot.speak(who + ' ' + text.slice(1).join(' '));
 			break; 
@@ -154,6 +161,66 @@ if (data.name != "@noamchomsky666"){
 						else
 						{bot.speak("Don't seem to ahev any info on " + playing.artist + " right now.")}
 					});
+				break;
+				
+				case 'tour':
+					//finds if the artist is touring locally
+					var centerPostCodes = {};
+					var closeshows = [];
+					var postal = text[2];
+					 
+					var country = 'US';
+					
+					request('http://api.geonames.org/postalCodeLookupJSON?postalcode=' 
+							+ postal + '&country=' + country 
+							+ '&username=' + geonamesid, 
+							function (error, response, body) {
+								if(!error && response.statusCode == 200) {
+									pcode = JSON.parse(body);
+									
+										centerPostCode = {	'lng':pcode.postalcodes[0].lng, 
+															'lat':pcode.postalcodes[0].lat};
+								}
+								else {console.log('no postalcode data');}
+								 // now we have the lat/lngs, lets get touring info 
+								//first we get the songkick artist id, unless we have an mbid
+
+							request('http://api.songkick.com/api/3.0/search/artists.json?query='
+									+  encodeURIComponent(playing.artist) + '&apikey=KZyXwTnmmcIr4H9g',
+									function (error, response, body) {
+										if(!error && response.statusCode == 200) {
+											sk = JSON.parse(body);
+											var skid = sk.resultsPage.results.artist[0].id; 
+										}
+										//now we get the concerts they are playing
+									request('http://api.songkick.com/api/3.0/artists/'
+											+ skid + '/calendar.json?apikey=KZyXwTnmmcIr4H9g',
+											function (error, response, body) {
+												if(!error && response.statusCode == 200) {
+													results = JSON.parse(body);
+													console.log(body);
+													for (show in results.resultsPage.results.event){
+														//equirectangular projection distance calculation
+														
+														
+														var x = (parseFloat(centerPostCode.lng) - parseFloat(results.resultsPage.results.event[show].location.lng)).toRad() * Math.cos((parseFloat(centerPostCode.lat) + parseFloat(results.resultsPage.results.event[show].location.lat)).toRad()/2);
+														var y = (parseFloat(centerPostCode.lat) - parseFloat(results.resultsPage.results.event[show].location.lat)).toRad();
+														var d =  Math.sqrt(x*x + y*y) * 6371;
+														console.log(d);
+														if (d <= 50){
+															closeshows.push(results.resultsPage.results.event[show].start.date + ' @ ' 
+																			+ results.resultsPage.results.event[show].venue.displayName + ' in '
+																			+ results.resultsPage.results.event[show].location.city);
+																	}			
+														}
+												}
+												bot.speak(closeshows.join(' | ') );
+												
+											});
+									});
+							}
+							);
+					break;
 			}
 			break;
 			
@@ -201,7 +268,6 @@ if (data.name != "@noamchomsky666"){
 			}
 			break;	 	
 		default:
-			pass;
    		}
    	}
 	});
